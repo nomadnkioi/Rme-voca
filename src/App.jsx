@@ -3,6 +3,9 @@ import { supabase } from './utils/supabaseClient';
 import './App.css';
 
 const App = () => {
+  const [vocabs, setVocabs] = useState([]); // 단어 목록
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [searchQuery, setSearchQuery] = useState(''); // 검색어
   const [expandedVocabId, setExpandedVocabId] = useState(null); // 현재 펼쳐진 단일 카드 ID 저장
   
   // 모달 제어
