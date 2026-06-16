@@ -6,6 +6,7 @@ const App = () => {
   const [vocabs, setVocabs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedVocabIds, setExpandedVocabIds] = useState({}); // 펼쳐진 카드 ID 저장
   
   // 모달 제어
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +14,7 @@ const App = () => {
 
   // 입력 폼 상태
   const [word, setWord] = useState('');
+  const [etymology, setEtymology] = useState(''); // 어원 추가
   const [meanings, setMeanings] = useState([{ pos: 'noun', meaning: '' }]);
   const [examples, setExamples] = useState([{ english: '', korean: '' }]);
 
@@ -63,15 +65,18 @@ const App = () => {
   };
 
   // 3. 등록/수정 모달 열기
-  const openModal = (vocab = null) => {
+  const openModal = (vocab = null, e = null) => {
+    if (e) e.stopPropagation(); // 카드 탭 이벤트 전파 방지
     if (vocab) {
       setEditingVocab(vocab);
       setWord(vocab.word);
+      setEtymology(vocab.etymology || '');
       setMeanings(vocab.meanings.length ? vocab.meanings : [{ pos: 'noun', meaning: '' }]);
       setExamples(vocab.examples && vocab.examples.length ? vocab.examples : [{ english: '', korean: '' }]);
     } else {
       setEditingVocab(null);
       setWord('');
+      setEtymology('');
       setMeanings([{ pos: 'noun', meaning: '' }]);
       setExamples([{ english: '', korean: '' }]);
     }
@@ -97,6 +102,7 @@ const App = () => {
 
     const payload = {
       word: word.trim(),
+      etymology: etymology.trim(),
       meanings: filteredMeanings,
       examples: filteredExamples
     };
@@ -158,6 +164,14 @@ const App = () => {
     setExamples(updated);
   };
 
+  // 카드 아코디언 토글
+  const toggleExpand = (id) => {
+    setExpandedVocabIds(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   // 필터링된 단어 리스트
   const filteredVocabs = vocabs.filter(v => {
     const query = searchQuery.toLowerCase().trim();
@@ -211,57 +225,76 @@ const App = () => {
       ) : (
         /* 단어 리스트 */
         <main className="vocab-list">
-          {filteredVocabs.map(v => (
-            <div key={v.id} className="vocab-card" onClick={() => openModal(v)}>
-              <div className="card-top">
-                <div className="word-row">
-                  <h3 className="card-word">{v.word}</h3>
-                  <button className="tts-btn" onClick={(e) => speakText(v.word, e)} title="발음 듣기">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    </svg>
-                  </button>
-                </div>
-                
-                <div className="card-actions">
-                  <button className="card-action-btn delete" onClick={(e) => handleDelete(v.id, e)} title="삭제">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              {/* 품사 및 뜻 */}
-              <div className="meanings-container">
-                {v.meanings.map((m, idx) => (
-                  <div key={idx} className="meaning-row">
-                    <span className={`pos-tag ${m.pos}`}>{m.pos}</span>
-                    <span className="meaning-text">{m.meaning}</span>
+          {filteredVocabs.map(v => {
+            const isExpanded = !!expandedVocabIds[v.id];
+            return (
+              <div key={v.id} className={`vocab-card ${isExpanded ? 'active' : ''}`} onClick={() => toggleExpand(v.id)}>
+                <div className="card-top">
+                  <div className="word-row">
+                    <h3 className="card-word">{v.word}</h3>
+                    <button className="tts-btn" onClick={(e) => speakText(v.word, e)} title="발음 듣기">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                      </svg>
+                    </button>
                   </div>
-                ))}
-              </div>
+                  
+                  <div className="card-actions">
+                    {/* 삭제 왼쪽 수정버튼 추가 */}
+                    <button className="card-action-btn edit" onClick={(e) => openModal(v, e)} title="수정" style={{ marginRight: '6px' }}>
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                      </svg>
+                    </button>
+                    <button className="card-action-btn delete" onClick={(e) => handleDelete(v.id, e)} title="삭제">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
 
-              {/* 예시문 */}
-              {v.examples && v.examples.length > 0 && (
-                <div className="examples-container">
-                  {v.examples.map((ex, idx) => (
-                    <div key={idx} className="example-item" onClick={(e) => e.stopPropagation()}>
-                      <span className="ex-english">{ex.english}</span>
-                      <span className="ex-korean">{ex.korean}</span>
-                      <button className="ex-tts" onClick={() => speakText(ex.english)} title="문장 듣기">
-                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        </svg>
-                      </button>
+                {/* 어원 노출 */}
+                {v.etymology && (
+                  <div className="etymology-badge-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--accent-color)', fontWeight: 'bold', background: '#FFF0EC', padding: '3px 8px', borderRadius: '6px', border: '1px solid rgba(255, 59, 0, 0.1)' }}>
+                      🔍 어원: {v.etymology}
+                    </span>
+                  </div>
+                )}
+
+                {/* 품사 및 뜻 */}
+                <div className="meanings-container">
+                  {v.meanings.map((m, idx) => (
+                    <div key={idx} className="meaning-row">
+                      <span className={`pos-tag ${m.pos}`}>{m.pos}</span>
+                      <span className="meaning-text">{m.meaning}</span>
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
-          ))}
+
+                {/* 아코디언식 예시문 노출 */}
+                {isExpanded && v.examples && v.examples.length > 0 && (
+                  <div className="examples-container">
+                    {v.examples.map((ex, idx) => (
+                      <div key={idx} className="example-item" onClick={(e) => e.stopPropagation()}>
+                        <span className="ex-english">{ex.english}</span>
+                        <span className="ex-korean">{ex.korean}</span>
+                        <button className="ex-tts" onClick={() => speakText(ex.english)} title="문장 듣기">
+                          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </main>
       )}
 
@@ -285,6 +318,18 @@ const App = () => {
                   value={word}
                   onChange={(e) => setWord(e.target.value)}
                   autoFocus
+                />
+              </div>
+
+              {/* 어원 입력란 */}
+              <div className="form-group">
+                <label>Etymology (어원)</label>
+                <input 
+                  type="text" 
+                  placeholder="예: Lat. resilientem (돌아오는)" 
+                  className="form-input" 
+                  value={etymology}
+                  onChange={(e) => setEtymology(e.target.value)}
                 />
               </div>
 
