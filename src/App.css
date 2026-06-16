@@ -237,6 +237,9 @@
   border-top: 1.5px dashed var(--border-color);
   padding-top: 14px;
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 예문 카드들 사이에 10px 마진/여백 추가 */
 }
 
 .example-item {
