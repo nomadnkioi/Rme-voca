@@ -3,10 +3,7 @@ import { supabase } from './utils/supabaseClient';
 import './App.css';
 
 const App = () => {
-  const [vocabs, setVocabs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [expandedVocabIds, setExpandedVocabIds] = useState({}); // 펼쳐진 카드 ID 저장
+  const [expandedVocabId, setExpandedVocabId] = useState(null); // 현재 펼쳐진 단일 카드 ID 저장
   
   // 모달 제어
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +55,7 @@ const App = () => {
 
       if (error) throw error;
       setVocabs(vocabs.filter(v => v.id !== id));
+      if (expandedVocabId === id) setExpandedVocabId(null); // 삭제 시 펼침 상태 초기화
     } catch (e) {
       console.error("Delete failed:", e);
       alert("삭제 처리에 실패했습니다.");
@@ -164,12 +162,9 @@ const App = () => {
     setExamples(updated);
   };
 
-  // 카드 아코디언 토글
+  // 카드 아코디언 단일 토글
   const toggleExpand = (id) => {
-    setExpandedVocabIds(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+    setExpandedVocabId(prev => prev === id ? null : id);
   };
 
   // 필터링된 단어 리스트
@@ -226,7 +221,7 @@ const App = () => {
         /* 단어 리스트 */
         <main className="vocab-list">
           {filteredVocabs.map(v => {
-            const isExpanded = !!expandedVocabIds[v.id];
+            const isExpanded = expandedVocabId === v.id;
             return (
               <div key={v.id} className={`vocab-card ${isExpanded ? 'active' : ''}`} onClick={() => toggleExpand(v.id)}>
                 <div className="card-top">
