@@ -8,6 +8,31 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState(''); // 검색어
   const [expandedVocabId, setExpandedVocabId] = useState(null); // 현재 펼쳐진 단일 카드 ID 저장
   
+  const [currentTab, setCurrentTab] = useState('all'); // 'all', 'frequent', 'rare'
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const saved = localStorage.getItem('vocab_favorites');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.error(e);
+      return {};
+    }
+  });
+
+  const toggleFavorite = (id, type, e) => {
+    if (e) e.stopPropagation();
+    const updated = {
+      ...favorites,
+      [id]: {
+        frequent: favorites[id]?.frequent || false,
+        rare: favorites[id]?.rare || false,
+        [type]: !favorites[id]?.[type]
+      }
+    };
+    setFavorites(updated);
+    localStorage.setItem('vocab_favorites', JSON.stringify(updated));
+  };
+
   // 모달 제어
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingVocab, setEditingVocab] = useState(null);
@@ -140,19 +165,6 @@ const App = () => {
     }
   };
 
-  // 5. 음성 발음 재생 (TTS)
-  const speakText = (text, e) => {
-    if (e) e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel(); // 이전 재생 취소
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.9; // 속도를 살짝 낮춰 또박또박하게 발음
-      window.speechSynthesis.speak(utterance);
-    } else {
-      alert("이 브라우저는 음성 재생을 지원하지 않습니다.");
-    }
-  };
 
   // 입력 핸들러 (동적 리스트)
   const handleMeaningChange = (index, field, value) => {
@@ -172,6 +184,11 @@ const App = () => {
 
   // 필터링된 단어 리스트
   const filteredVocabs = vocabs.filter(v => {
+    // 탭 필터링
+    if (currentTab === 'frequent' && !favorites[v.id]?.frequent) return false;
+    if (currentTab === 'rare' && !favorites[v.id]?.rare) return false;
+
+    // 검색어 필터링
     const query = searchQuery.toLowerCase().trim();
     if (!query) return true;
     
@@ -230,26 +247,28 @@ const App = () => {
                 <div className="card-top">
                   <div className="word-row">
                     <h3 className="card-word">{v.word}</h3>
-                    <button className="tts-btn" onClick={(e) => speakText(v.word, e)} title="발음 듣기">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                      </svg>
-                    </button>
                   </div>
                   
                   <div className="card-actions">
-                    {/* 삭제 왼쪽 수정버튼 추가 */}
-                    <button className="card-action-btn edit" onClick={(e) => openModal(v, e)} title="수정" style={{ marginRight: '6px' }}>
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 20h9"></path>
-                        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                    <button 
+                      className={`bookmark-btn heart ${favorites[v.id]?.frequent ? 'active' : ''}`} 
+                      onClick={(e) => toggleFavorite(v.id, 'frequent', e)} 
+                      title="자주 찾는 단어"
+                    >
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill={favorites[v.id]?.frequent ? "#FF3B00" : "none"} stroke={favorites[v.id]?.frequent ? "#FF3B00" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                       </svg>
                     </button>
-                    <button className="card-action-btn delete" onClick={(e) => handleDelete(v.id, e)} title="삭제">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <button 
+                      className={`bookmark-btn cat ${favorites[v.id]?.rare ? 'active' : ''}`} 
+                      onClick={(e) => toggleFavorite(v.id, 'rare', e)} 
+                      title="희귀한 단어"
+                    >
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill={favorites[v.id]?.rare ? "#8A2BE2" : "none"} stroke={favorites[v.id]?.rare ? "#8A2BE2" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 5c-1.2 0-2.4.3-3.4.8L6 3 5 6c-1.8 1.8-3 4.3-3 7 0 5 4 9 10 9s10-4 10-9c0-2.7-1.2-5.2-3-7l1-3-2.6 2.8c-1-.5-2.2-.8-3.4-.8z" />
+                        <circle cx="8.5" cy="13" r="1" fill={favorites[v.id]?.rare ? "#FFFFFF" : "currentColor"}/>
+                        <circle cx="15.5" cy="13" r="1" fill={favorites[v.id]?.rare ? "#FFFFFF" : "currentColor"}/>
+                        <path d="M10 16c.8.5 1.7.5 2.5 0" />
                       </svg>
                     </button>
                   </div>
@@ -274,20 +293,35 @@ const App = () => {
                   ))}
                 </div>
 
-                {/* 아코디언식 예시문 노출 */}
-                {isExpanded && v.examples && v.examples.length > 0 && (
-                  <div className="examples-container">
-                    {v.examples.map((ex, idx) => (
-                      <div key={idx} className="example-item" onClick={(e) => e.stopPropagation()}>
-                        <span className="ex-english">{ex.english}</span>
-                        <span className="ex-korean">{ex.korean}</span>
-                        <button className="ex-tts" onClick={() => speakText(ex.english)} title="문장 듣기">
-                          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                          </svg>
-                        </button>
+                {/* 아코디언식 예시문 및 하단 수정/삭제 버튼 */}
+                {isExpanded && (
+                  <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
+                    {v.examples && v.examples.length > 0 && (
+                      <div className="examples-container">
+                        {v.examples.map((ex, idx) => (
+                          <div key={idx} className="example-item">
+                            <span className="ex-english">{ex.english}</span>
+                            <span className="ex-korean">{ex.korean}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
+                    <div className="expanded-actions">
+                      <button className="card-action-btn edit" onClick={(e) => openModal(v, e)} title="수정">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 20h9"></path>
+                          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                        </svg>
+                        수정
+                      </button>
+                      <button className="card-action-btn delete" onClick={(e) => handleDelete(v.id, e)} title="삭제">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        삭제
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -346,6 +380,7 @@ const App = () => {
                       <option value="adj">adj</option>
                       <option value="adv">adv</option>
                       <option value="idiom">idiom</option>
+                      <option value="abbr">abbr</option>
                     </select>
                     <input 
                       type="text" 
@@ -425,6 +460,27 @@ const App = () => {
           </div>
         </div>
       )}
+      {/* 하단 탭 메뉴 */}
+      <nav className="tab-navigation">
+        <button 
+          className={`tab-item ${currentTab === 'all' ? 'active' : ''}`} 
+          onClick={() => setCurrentTab('all')}
+        >
+          <span className="tab-label">All</span>
+        </button>
+        <button 
+          className={`tab-item ${currentTab === 'frequent' ? 'active' : ''}`} 
+          onClick={() => setCurrentTab('frequent')}
+        >
+          <span className="tab-label">Frequent</span>
+        </button>
+        <button 
+          className={`tab-item ${currentTab === 'rare' ? 'active' : ''}`} 
+          onClick={() => setCurrentTab('rare')}
+        >
+          <span className="tab-label">Rare</span>
+        </button>
+      </nav>
     </div>
   );
 };

@@ -225,6 +225,7 @@
 .pos-tag.verb { background-color: var(--accent-color); }
 .pos-tag.adj { background-color: #00BCD4; }
 .pos-tag.adv { background-color: #8BC34A; }
+.pos-tag.abbr { background-color: #9C27B0; }
 
 .meaning-text {
   font-size: 0.85rem;
@@ -434,3 +435,135 @@
   padding: 16px 24px;
   font-size: 0.95rem;
 }
+
+/* 하단 탭 네비게이션 */
+.tab-navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  background-color: var(--primary-bg);
+  border-top: 2px solid var(--text-color);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.tab-item {
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #8E8A80;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  transition: all 0.15s ease;
+  flex: 1;
+  border-bottom: 4px solid transparent;
+  height: 100%;
+}
+
+.tab-item:active {
+  transform: translateY(1px);
+}
+
+.tab-item.active {
+  color: var(--text-color);
+  font-weight: 900;
+  border-bottom: 4px solid var(--accent-color);
+}
+
+.tab-icon {
+  font-size: 1.2rem;
+}
+
+.tab-label {
+  letter-spacing: -0.2px;
+}
+
+/* 북마크 하트 & 고양이 버튼 */
+.bookmark-btn {
+  background: none;
+  border: none;
+  color: #C5C2CD;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.bookmark-btn:hover {
+  background-color: #FAF9F6;
+  transform: scale(1.1);
+}
+
+.bookmark-btn.heart:hover {
+  color: #FF3B00;
+  background-color: #FFF0EC;
+}
+
+.bookmark-btn.cat:hover {
+  color: #8A2BE2;
+  background-color: #F3E8FF;
+}
+
+.bookmark-btn.heart.active {
+  color: #FF3B00;
+}
+
+.bookmark-btn.cat.active {
+  color: #8A2BE2;
+}
+
+/* 단어 카드 펼침 영역 및 하단 수정/삭제 버튼 */
+.card-expanded-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.expanded-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1.5px dashed var(--border-color);
+}
+
+.expanded-actions .card-action-btn {
+  background: #FAF9F6;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.expanded-actions .card-action-btn:hover {
+  background: #EFEFEF;
+  color: var(--text-color);
+  border-color: var(--text-color);
+}
+
+.expanded-actions .card-action-btn.delete:hover {
+  background: #FFF0EC;
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
