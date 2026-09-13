@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from './utils/supabaseClient';
+import {
+  db,
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+} from './utils/firebaseClient';
 import './App.css';
 
 const App = () => {
@@ -43,7 +53,7 @@ const App = () => {
   const [meanings, setMeanings] = useState([{ pos: 'noun', meaning: '' }]);
   const [examples, setExamples] = useState([{ english: '', korean: '' }]);
 
-  // 1. 단어 목록 가져오기
+  // 1. 단어 목록 가져오기 (Firebase Firestore 연동)
   useEffect(() => {
     fetchVocabs();
   }, []);
@@ -51,18 +61,46 @@ const App = () => {
   const fetchVocabs = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('vocabularies')
-        .select('*')
-        .order('word', { ascending: true });
+      if (db) {
+        const q = query(collection(db, 'my_vocabularies'), orderBy('word', 'asc'));
+        const querySnapshot = await getDocs(q);
+        const list = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({
+            id: docSnap.id,
+            ...docSnap.data(),
+          });
+        });
 
-      if (error) throw error;
-      if (data) {
-        setVocabs(data);
+        // 만약 파이어베이스에 데이터가 있으면 state와 로컬에 백업 저장
+        if (list.length > 0) {
+          setVocabs(list);
+          try {
+            localStorage.setItem('my_vocab_list', JSON.stringify(list));
+          } catch (e) {}
+        } else {
+          // 파이어베이스가 아직 비어있다면 기존 로컬스토리지 복구 후 파이어베이스로 마이그레이션
+          const local = localStorage.getItem('my_vocab_list');
+          if (local) {
+            const parsedLocal = JSON.parse(local);
+            setVocabs(parsedLocal);
+            // 로컬 데이터를 파이어베이스로 일괄 업로드
+            parsedLocal.forEach(async (v) => {
+              try {
+                const { id, ...dataToSave } = v;
+                await addDoc(collection(db, 'my_vocabularies'), {
+                  ...dataToSave,
+                  created_at: new Date().toISOString(),
+                });
+              } catch (err) {}
+            });
+          }
+        }
+      } else {
+        throw new Error('Database not initialized');
       }
     } catch (e) {
       console.error("Fetch failed, using local fallback:", e);
-      // fallback
       const local = localStorage.getItem('my_vocab_list');
       if (local) setVocabs(JSON.parse(local));
     } finally {
@@ -76,14 +114,15 @@ const App = () => {
     if (!window.confirm("정말 이 단어를 삭제할까요?")) return;
     
     try {
-      const { error } = await supabase
-        .from('vocabularies')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-      setVocabs(vocabs.filter(v => v.id !== id));
-      if (expandedVocabId === id) setExpandedVocabId(null); // 삭제 시 펼침 상태 초기화
+      if (db) {
+        await deleteDoc(doc(db, 'my_vocabularies', String(id)));
+      }
+      const updated = vocabs.filter(v => v.id !== id);
+      setVocabs(updated);
+      try {
+        localStorage.setItem('my_vocab_list', JSON.stringify(updated));
+      } catch (err) {}
+      if (expandedVocabId === id) setExpandedVocabId(null);
     } catch (e) {
       console.error("Delete failed:", e);
       alert("삭제 처리에 실패했습니다.");
@@ -136,27 +175,30 @@ const App = () => {
     try {
       if (editingVocab) {
         // 수정 모드
-        const { data, error } = await supabase
-          .from('vocabularies')
-          .update(payload)
-          .eq('id', editingVocab.id)
-          .select();
-
-        if (error) throw error;
-        if (data) {
-          setVocabs(vocabs.map(v => v.id === editingVocab.id ? data[0] : v));
+        if (db) {
+          await updateDoc(doc(db, 'my_vocabularies', String(editingVocab.id)), payload);
         }
+        const updatedList = vocabs.map(v => v.id === editingVocab.id ? { ...v, ...payload } : v);
+        setVocabs(updatedList);
+        try {
+          localStorage.setItem('my_vocab_list', JSON.stringify(updatedList));
+        } catch (err) {}
       } else {
         // 새 단어 모드
-        const { data, error } = await supabase
-          .from('vocabularies')
-          .insert([payload])
-          .select();
-
-        if (error) throw error;
-        if (data) {
-          setVocabs([...vocabs, data[0]].sort((a, b) => a.word.localeCompare(b.word)));
+        let newDocId = `doc_${Date.now()}`;
+        if (db) {
+          const docRef = await addDoc(collection(db, 'my_vocabularies'), {
+            ...payload,
+            created_at: new Date().toISOString(),
+          });
+          newDocId = docRef.id;
         }
+        const newItem = { id: newDocId, ...payload, created_at: new Date().toISOString() };
+        const updatedList = [...vocabs, newItem].sort((a, b) => a.word.localeCompare(b.word));
+        setVocabs(updatedList);
+        try {
+          localStorage.setItem('my_vocab_list', JSON.stringify(updatedList));
+        } catch (err) {}
       }
       setIsModalOpen(false);
     } catch (err) {
