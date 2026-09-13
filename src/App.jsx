@@ -344,7 +344,7 @@ const App = () => {
                       onClick={(e) => toggleFavorite(v.id, 'rare', e)} 
                       title="희귀한 단어"
                     >
-                      <svg viewBox="0 0 24 24" width="20" height="20" fill={favorites[v.id]?.rare ? "#8A2BE2" : "none"} stroke={favorites[v.id]?.rare ? "#8A2BE2" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill={favorites[v.id]?.rare ? "#3A506E" : "none"} stroke={favorites[v.id]?.rare ? "#3A506E" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M12 5c-1.2 0-2.4.3-3.4.8L6 3 5 6c-1.8 1.8-3 4.3-3 7 0 5 4 9 10 9s10-4 10-9c0-2.7-1.2-5.2-3-7l1-3-2.6 2.8c-1-.5-2.2-.8-3.4-.8z" />
                         <circle cx="8.5" cy="13" r="1" fill={favorites[v.id]?.rare ? "#FFFFFF" : "currentColor"}/>
                         <circle cx="15.5" cy="13" r="1" fill={favorites[v.id]?.rare ? "#FFFFFF" : "currentColor"}/>

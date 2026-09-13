@@ -561,7 +561,7 @@
 }
 
 .tab-item.tab-rare.active::after {
-  background-color: #8A2BE2;
+  background-color: #3A506E;
 }
 
 .tab-icon {
@@ -596,8 +596,8 @@
 }
 
 .bookmark-btn.cat:hover {
-  color: #8A2BE2;
-  background-color: #F3E8FF;
+  color: #3A506E;
+  background-color: #F0F4F8;
 }
 
 .bookmark-btn.heart.active {
@@ -605,7 +605,7 @@
 }
 
 .bookmark-btn.cat.active {
-  color: #8A2BE2;
+  color: #3A506E;
 }
 
 /* 단어 카드 펼침 영역 및 아이콘 전용 수정/삭제 버튼 */
