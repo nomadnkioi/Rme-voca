@@ -79,21 +79,23 @@ const App = () => {
             localStorage.setItem('my_vocab_list', JSON.stringify(list));
           } catch (e) {}
         } else {
-          // 파이어베이스가 아직 비어있다면 기존 로컬스토리지 복구 후 파이어베이스로 마이그레이션
-          const local = localStorage.getItem('my_vocab_list');
-          if (local) {
-            const parsedLocal = JSON.parse(local);
-            setVocabs(parsedLocal);
-            // 로컬 데이터를 파이어베이스로 일괄 업로드
-            parsedLocal.forEach(async (v) => {
-              try {
-                const { id, ...dataToSave } = v;
-                await addDoc(collection(db, 'my_vocabularies'), {
-                  ...dataToSave,
-                  created_at: new Date().toISOString(),
-                });
-              } catch (err) {}
-            });
+          // 파이어베이스가 비어있다면 기본 단어(resilient)를 등록하여 컬렉션 자동 생성
+          const sampleWord = {
+            word: 'resilient',
+            etymology: 'Lat. resilientem (돌아오는)',
+            meanings: [{ pos: 'adj', meaning: '탄력 있는, 회복력 있는' }],
+            examples: [{ english: 'She is a resilient woman.', korean: '그녀는 회복력이 뛰어난 여성이다.' }],
+            created_at: new Date().toISOString()
+          };
+          try {
+            const docRef = await addDoc(collection(db, 'my_vocabularies'), sampleWord);
+            const newList = [{ id: docRef.id, ...sampleWord }];
+            setVocabs(newList);
+            try {
+              localStorage.setItem('my_vocab_list', JSON.stringify(newList));
+            } catch (err) {}
+          } catch (err) {
+            console.error('샘플 단어 생성 실패:', err);
           }
         }
       } else {
