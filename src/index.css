@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-bg: #FAF9F6;      /* 맑고 정갈한 스위스 샌드 아이보리 */
-  --accent-color: #FF3B00;    /* 선명하고 쨍한 스위스 오렌지 레드 */
+  --primary-bg: #FFFFFF;      /* 깨끗한 퓨어 화이트 배경 */
+  --accent-color: #FF3B00;    /* 선명한 스위스 오렌지 레드 */
   --text-color: #111111;      /* 차콜 블랙 */
   --card-bg: #FFFFFF;
-  --border-color: #E2DFD8;
+  --border-color: #E6E6E6;    /* 미니멀 클리어 테두리 */
+  --pantone-orchid-ice: #CBB9CE;   /* PANTONE 13-3406 Orchid Ice (연라벤더) */
+  --pantone-silver-birch: #D5D3CA; /* PANTONE 13-4403 Silver Birch (실버 버치) */
   
   --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;

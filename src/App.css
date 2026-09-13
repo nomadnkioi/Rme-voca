@@ -58,16 +58,17 @@
 }
 
 .add-btn {
-  background: var(--accent-color);
-  color: white;
-  border: none;
+  background: var(--pantone-silver-birch);
+  color: var(--text-color);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 50px;
   padding: 6px 14px;
   font-size: 0.78rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 5px;
-  box-shadow: 0 3px 10px rgba(255, 59, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .add-btn svg {
@@ -229,12 +230,11 @@
   font-family: var(--font-sans);
 }
 
-/* 미니멀 하이픈바 형태의 얇은 구분선 */
+/* PANTONE 13-3406 Orchid Ice (연라벤더) 하이픈 바 */
 .card-divider {
-  width: 14px;
+  width: 16px;
   height: 2px;
-  background-color: var(--accent-color);
-  opacity: 0.75;
+  background-color: var(--pantone-orchid-ice);
   border-radius: 1px;
   margin: 4px 0 5px 0;
 }
@@ -292,7 +292,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  background: #FAF9F6;
+  background: #F7F7F8;
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
