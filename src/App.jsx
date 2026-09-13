@@ -62,24 +62,54 @@ const App = () => {
     setLoading(true);
     try {
       if (db) {
+        // 1. 파이어베이스 클라우드 단어 조회
         const q = query(collection(db, 'my_vocabularies'), orderBy('word', 'asc'));
         const querySnapshot = await getDocs(q);
-        const list = [];
+        const cloudList = [];
         querySnapshot.forEach((docSnap) => {
-          list.push({
+          cloudList.push({
             id: docSnap.id,
             ...docSnap.data(),
           });
         });
 
-        // 만약 파이어베이스에 데이터가 있으면 state와 로컬에 백업 저장
-        if (list.length > 0) {
-          setVocabs(list);
+        // 2. 스마트폰/브라우저 로컬스토리지 기존 단어 확인
+        let localList = [];
+        try {
+          const savedLocal = localStorage.getItem('my_vocab_list');
+          if (savedLocal) localList = JSON.parse(savedLocal);
+        } catch (e) {}
+
+        // 3. 로컬 단어와 파이어베이스 단어 안전 병합 (단어 기준 중복 제거 및 보존)
+        const combinedMap = new Map();
+        localList.forEach((v) => combinedMap.set(v.word, v));
+        cloudList.forEach((v) => combinedMap.set(v.word, v));
+
+        const finalVocabs = Array.from(combinedMap.values()).sort((a, b) =>
+          a.word.localeCompare(b.word)
+        );
+
+        if (finalVocabs.length > 0) {
+          setVocabs(finalVocabs);
           try {
-            localStorage.setItem('my_vocab_list', JSON.stringify(list));
+            localStorage.setItem('my_vocab_list', JSON.stringify(finalVocabs));
           } catch (e) {}
+
+          // 파이어베이스에 없는 기존 로컬 단어가 있다면 파이어베이스로 일괄 업로드 백업
+          localList.forEach(async (v) => {
+            const existsInCloud = cloudList.some((c) => c.word === v.word);
+            if (!existsInCloud) {
+              try {
+                const { id, ...dataToSave } = v;
+                await addDoc(collection(db, 'my_vocabularies'), {
+                  ...dataToSave,
+                  created_at: v.created_at || new Date().toISOString(),
+                });
+              } catch (err) {}
+            }
+          });
         } else {
-          // 파이어베이스가 비어있다면 기본 단어(resilient)를 등록하여 컬렉션 자동 생성
+          // 파이어베이스와 로컬이 모두 비어있을 때만 샘플 단어 등록
           const sampleWord = {
             word: 'resilient',
             etymology: 'Lat. resilientem (돌아오는)',
@@ -94,12 +124,8 @@ const App = () => {
             try {
               localStorage.setItem('my_vocab_list', JSON.stringify(newList));
             } catch (err) {}
-          } catch (err) {
-            console.error('샘플 단어 생성 실패:', err);
-          }
+          } catch (err) {}
         }
-      } else {
-        throw new Error('Database not initialized');
       }
     } catch (e) {
       console.error("Fetch failed, using local fallback:", e);
