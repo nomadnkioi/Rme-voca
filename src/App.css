@@ -557,7 +557,7 @@
 }
 
 .tab-item.tab-frequent.active::after {
-  background-color: #FF8FA3;
+  background-color: #F692C6;
 }
 
 .tab-item.tab-rare.active::after {
@@ -591,8 +591,8 @@
 }
 
 .bookmark-btn.heart:hover {
-  color: #FF8FA3;
-  background-color: #FFF0F3;
+  color: #F692C6;
+  background-color: #FDF0F7;
 }
 
 .bookmark-btn.cat:hover {
@@ -601,7 +601,7 @@
 }
 
 .bookmark-btn.heart.active {
-  color: #FF8FA3;
+  color: #F692C6;
 }
 
 .bookmark-btn.cat.active {
