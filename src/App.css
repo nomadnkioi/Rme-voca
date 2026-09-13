@@ -58,7 +58,7 @@
 }
 
 .add-btn {
-  background: #978FF9;
+  background: #C4BEE2;
   color: #FFFFFF;
   border: none;
   border-radius: 50px;
@@ -69,13 +69,13 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  box-shadow: 0 4px 14px rgba(151, 143, 249, 0.35);
+  box-shadow: 0 4px 14px rgba(196, 190, 226, 0.45);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .add-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(151, 143, 249, 0.45);
+  box-shadow: 0 6px 18px rgba(196, 190, 226, 0.6);
 }
 
 .add-btn svg {
