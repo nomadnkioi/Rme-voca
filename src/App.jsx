@@ -335,7 +335,7 @@ const App = () => {
                       onClick={(e) => toggleFavorite(v.id, 'frequent', e)} 
                       title="자주 찾는 단어"
                     >
-                      <svg viewBox="0 0 24 24" width="20" height="20" fill={favorites[v.id]?.frequent ? "#FF3B00" : "none"} stroke={favorites[v.id]?.frequent ? "#FF3B00" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill={favorites[v.id]?.frequent ? "#FF8FA3" : "none"} stroke={favorites[v.id]?.frequent ? "#FF8FA3" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                       </svg>
                     </button>
@@ -540,19 +540,19 @@ const App = () => {
       {/* 하단 탭 메뉴 */}
       <nav className="tab-navigation">
         <button 
-          className={`tab-item ${currentTab === 'all' ? 'active' : ''}`} 
+          className={`tab-item tab-all ${currentTab === 'all' ? 'active' : ''}`} 
           onClick={() => setCurrentTab('all')}
         >
           <span className="tab-label">All</span>
         </button>
         <button 
-          className={`tab-item ${currentTab === 'frequent' ? 'active' : ''}`} 
+          className={`tab-item tab-frequent ${currentTab === 'frequent' ? 'active' : ''}`} 
           onClick={() => setCurrentTab('frequent')}
         >
           <span className="tab-label">Frequent</span>
         </button>
         <button 
-          className={`tab-item ${currentTab === 'rare' ? 'active' : ''}`} 
+          className={`tab-item tab-rare ${currentTab === 'rare' ? 'active' : ''}`} 
           onClick={() => setCurrentTab('rare')}
         >
           <span className="tab-label">Rare</span>

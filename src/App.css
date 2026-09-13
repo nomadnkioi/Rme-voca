@@ -552,6 +552,18 @@
   border-radius: 2px;
 }
 
+.tab-item.tab-all.active::after {
+  background-color: #C4BEE2;
+}
+
+.tab-item.tab-frequent.active::after {
+  background-color: #FF8FA3;
+}
+
+.tab-item.tab-rare.active::after {
+  background-color: #8A2BE2;
+}
+
 .tab-icon {
   font-size: 1.1rem;
 }
@@ -579,8 +591,8 @@
 }
 
 .bookmark-btn.heart:hover {
-  color: #FF3B00;
-  background-color: #FFF0EC;
+  color: #FF8FA3;
+  background-color: #FFF0F3;
 }
 
 .bookmark-btn.cat:hover {
@@ -589,7 +601,7 @@
 }
 
 .bookmark-btn.heart.active {
-  color: #FF3B00;
+  color: #FF8FA3;
 }
 
 .bookmark-btn.cat.active {
