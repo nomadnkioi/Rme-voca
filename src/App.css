@@ -136,14 +136,14 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
-  padding: 10px 18px max(90px, calc(70px + env(safe-area-inset-bottom, 24px))) 18px;
+  padding: 8px 12px max(90px, calc(70px + env(safe-area-inset-bottom, 24px))) 12px;
 }
 
 .vocab-card {
   background: white;
-  border-radius: 16px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
   border: 1.5px solid var(--border-color);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
@@ -151,22 +151,22 @@
 }
 
 .vocab-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   border-color: var(--text-color);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .card-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .word-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .card-word {
@@ -217,22 +217,34 @@
   color: var(--accent-color);
 }
 
+/* 어원 깔끔한 주황색 텍스트 표현 */
+.etymology-row {
+  margin-bottom: 4px;
+}
+
+.etymology-text {
+  font-size: 0.76rem;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+
 /* 품사 및 뜻 배치 */
 .meanings-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: 3px;
+  margin-bottom: 4px;
 }
 
 .meaning-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .pos-tag {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-family: var(--font-display);
   font-weight: 800;
   background: transparent;

@@ -356,10 +356,8 @@ const App = () => {
 
                 {/* 어원 노출 */}
                 {v.etymology && (
-                  <div className="etymology-badge-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--accent-color)', fontWeight: 'bold', background: '#FFF0EC', padding: '3px 8px', borderRadius: '6px', border: '1px solid rgba(255, 59, 0, 0.1)' }}>
-                      🔍 어원: {v.etymology}
-                    </span>
+                  <div className="etymology-row">
+                    <span className="etymology-text">{v.etymology}</span>
                   </div>
                 )}
 
