@@ -1,3 +1,4 @@
+// GitHub Pages clean deployment trigger
 import React, { useState, useEffect } from 'react';
 import {
   db,
