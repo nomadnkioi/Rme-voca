@@ -313,8 +313,8 @@ const App = () => {
         </div>
       ) : filteredVocabs.length === 0 ? (
         <div className="empty-view">
-          <span className="empty-icon">📖</span>
-          <p>등록된 단어가 없거나<br />검색 결과가 없습니다.</p>
+          <span className="empty-icon">🍕</span>
+          <p>feed me some words!</p>
         </div>
       ) : (
         /* 단어 리스트 */

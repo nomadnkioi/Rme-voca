@@ -132,9 +132,10 @@
 
 .empty-view p {
   font-size: 0.95rem;
-  color: #666;
-  font-weight: 500;
-  line-height: 1.5;
+  color: #D9534F;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: -0.2px;
 }
 
 /* 단어 리스트 */
@@ -520,7 +521,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #8E8A80;
+  color: #8E919A;
   font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 700;
@@ -537,7 +538,7 @@
 }
 
 .tab-item.active {
-  color: var(--text-color);
+  color: #6E737B;
   font-weight: 900;
 }
 
