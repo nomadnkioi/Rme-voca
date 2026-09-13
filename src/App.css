@@ -38,24 +38,22 @@
 
 .logo-text {
   font-family: var(--font-display);
-  font-size: 1.65rem;
-  font-weight: 900;
+  font-size: 1.55rem;
+  font-weight: 850;
   line-height: 1;
-  letter-spacing: -0.8px;
-  color: #F8B4DB;
-  -webkit-text-stroke: 1.2px #DF95C1;
-  paint-order: stroke fill;
+  letter-spacing: -0.6px;
+  color: #2D3142;
 }
 
 .logo-accent {
-  color: #F8B4DB;
-  -webkit-text-stroke: 1.2px #DF95C1;
-  paint-order: stroke fill;
+  color: #F692C6;
+  font-weight: 900;
 }
 
 .logo-heart {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   margin-left: 2px;
+  vertical-align: middle;
 }
 
 .add-btn {
