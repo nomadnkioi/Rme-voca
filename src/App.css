@@ -232,16 +232,16 @@
 
 .etymology-text {
   font-size: 0.76rem;
-  color: var(--accent-color);
+  color: #9882B5;
   font-weight: 600;
   font-family: var(--font-sans);
 }
 
-/* PANTONE 13-3406 Orchid Ice (연라벤더) 하이픈 바 */
+/* 연한 회색 미니멀 구분선 바 */
 .card-divider {
   width: 16px;
   height: 2px;
-  background-color: var(--pantone-orchid-ice);
+  background-color: #E2E2E6;
   border-radius: 1px;
   margin: 5px 0 9px 0;
 }
