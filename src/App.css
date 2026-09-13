@@ -272,12 +272,12 @@
   letter-spacing: 0.2px;
 }
 
-.pos-tag.noun { color: #555555; }
-.pos-tag.verb { color: var(--accent-color); }
-.pos-tag.adj { color: #00838F; }
-.pos-tag.adv { color: #558B2F; }
-.pos-tag.idiom { color: #333333; }
-.pos-tag.abbr { color: #7B1FA2; }
+.pos-tag.noun { color: #6367FF; }
+.pos-tag.verb { color: #8494FF; }
+.pos-tag.adj { color: #7B68F5; }
+.pos-tag.adv { color: #9A84FF; }
+.pos-tag.idiom { color: #E252B7; }
+.pos-tag.abbr { color: #A078FF; }
 
 .meaning-text {
   font-size: 0.82rem;
