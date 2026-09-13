@@ -282,7 +282,7 @@ const App = () => {
         <header className="header-bar">
           <div className="logo-container">
             <h1 className="logo-text">
-              R.me<span className="logo-accent">_</span>
+              Wordie<span className="logo-accent">_</span><span className="logo-heart">🩷</span>
             </h1>
             <span className="subtitle">nk's dictionary</span>
           </div>

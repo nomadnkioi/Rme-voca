@@ -48,6 +48,11 @@
   color: #7A30A8;
 }
 
+.logo-heart {
+  font-size: 1rem;
+  margin-left: 2px;
+}
+
 .subtitle {
   font-size: 0.68rem;
   color: #888888;
@@ -612,17 +617,17 @@
 .card-expanded-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 4px;
+  margin-top: 4px;
 }
 
 .expanded-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 6px;
-  margin-top: 4px;
-  padding-top: 8px;
-  border-top: 1px dashed var(--border-color);
+  gap: 4px;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 .expanded-actions .card-action-btn {
