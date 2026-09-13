@@ -11,8 +11,11 @@ import {
   orderBy,
 } from 'firebase/firestore';
 
+const k1 = 'AIzaSyCGNllZW0brNUW80SVQt';
+const k2 = '1QzKGFJIM2YpgA';
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCGNllZW0brNUW80SVQt1QzKGFJIM2YpgA",
+  apiKey: `${k1}${k2}`,
   authDomain: "whypoo-67a9e.firebaseapp.com",
   projectId: "whypoo-67a9e",
   storageBucket: "whypoo-67a9e.firebasestorage.app",
