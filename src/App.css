@@ -38,19 +38,19 @@
 
 .logo-text {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.65rem;
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -1px;
-  color: #6E737B;
+  letter-spacing: -0.8px;
+  color: #F692C6;
 }
 
 .logo-accent {
-  color: #6E737B;
+  color: #F692C6;
 }
 
 .logo-heart {
-  font-size: 1rem;
+  font-size: 1.15rem;
   margin-left: 2px;
 }
 
