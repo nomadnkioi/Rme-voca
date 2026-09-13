@@ -219,7 +219,7 @@
 
 /* 어원 깔끔한 주황색 텍스트 표현 */
 .etymology-row {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .etymology-text {
@@ -227,6 +227,16 @@
   color: var(--accent-color);
   font-weight: 600;
   font-family: var(--font-sans);
+}
+
+/* 미니멀 하이픈바 형태의 얇은 구분선 */
+.card-divider {
+  width: 14px;
+  height: 2px;
+  background-color: var(--accent-color);
+  opacity: 0.75;
+  border-radius: 1px;
+  margin: 4px 0 5px 0;
 }
 
 /* 품사 및 뜻 배치 */

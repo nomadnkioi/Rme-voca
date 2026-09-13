@@ -361,6 +361,9 @@ const App = () => {
                   </div>
                 )}
 
+                {/* 미니멀 구분선 바 */}
+                <div className="card-divider"></div>
+
                 {/* 품사 및 뜻 */}
                 <div className="meanings-container">
                   {v.meanings.map((m, idx) => (
