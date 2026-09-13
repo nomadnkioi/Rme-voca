@@ -43,10 +43,14 @@
   line-height: 1;
   letter-spacing: -0.8px;
   color: #F8B4DB;
+  -webkit-text-stroke: 1.2px #DF95C1;
+  paint-order: stroke fill;
 }
 
 .logo-accent {
   color: #F8B4DB;
+  -webkit-text-stroke: 1.2px #DF95C1;
+  paint-order: stroke fill;
 }
 
 .logo-heart {
