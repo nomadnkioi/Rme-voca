@@ -531,7 +531,6 @@ const App = () => {
 
               {/* 하단 버튼 */}
               <div className="modal-actions">
-                <button type="button" className="btn-cancel" onClick={() => setIsModalOpen(false)}>취소</button>
                 <button type="submit" className="btn-submit">{editingVocab ? '수정 완료' : '추가하기'}</button>
               </div>
             </form>
