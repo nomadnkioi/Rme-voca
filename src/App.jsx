@@ -418,7 +418,6 @@ const App = () => {
                   className="form-input" 
                   value={word}
                   onChange={(e) => setWord(e.target.value)}
-                  autoFocus
                 />
               </div>
 

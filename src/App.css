@@ -1,10 +1,13 @@
 .app-container {
   height: 100dvh;
+  height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
   background-color: var(--primary-bg);
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
 }
 
 /* 상단 헤더 */
@@ -16,6 +19,10 @@
   background-color: var(--primary-bg);
   border-bottom: 2px solid var(--text-color);
   z-index: 10;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
 }
 
 .logo-container {
@@ -69,6 +76,9 @@
 .search-container {
   padding: 10px 18px;
   background-color: var(--primary-bg);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .search-input {
@@ -82,6 +92,8 @@
   font-weight: 500;
   outline: none;
   transition: border-color 0.2s;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .search-input:focus {
@@ -115,6 +127,9 @@
 .vocab-list {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   padding: 6px 18px 70px 18px;
 }
 
@@ -450,6 +465,10 @@
   z-index: 90;
   height: calc(46px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
 }
 
 .tab-item {
