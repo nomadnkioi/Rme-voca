@@ -160,7 +160,14 @@ const App = () => {
 
   // 3. 등록/수정 모달 열기
   const openModal = (vocab = null, e = null) => {
-    if (e) e.stopPropagation(); // 카드 탭 이벤트 전파 방지
+    if (e) {
+      e.stopPropagation();
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+    }
+    // 포커스 해제로 모달 오픈 시 키보드 및 화면 스크롤 하단 이동 차단
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
     if (vocab) {
       setEditingVocab(vocab);
       setWord(vocab.word);
@@ -270,32 +277,34 @@ const App = () => {
 
   return (
     <div className="app-container">
-      {/* 상단 바 */}
-      <header className="header-bar">
-        <div className="logo-container">
-          <h1 className="logo-text">
-            R.me<span className="logo-accent">_</span>
-          </h1>
-          <span className="subtitle">nk's dictionary</span>
-        </div>
-        <button className="add-btn" onClick={() => openModal()}>
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          단어 추가
-        </button>
-      </header>
+      {/* 상단 고정 헤더 영역 */}
+      <div className="app-header-fixed">
+        <header className="header-bar">
+          <div className="logo-container">
+            <h1 className="logo-text">
+              R.me<span className="logo-accent">_</span>
+            </h1>
+            <span className="subtitle">nk's dictionary</span>
+          </div>
+          <button className="add-btn" onClick={(e) => openModal(null, e)}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            단어 추가
+          </button>
+        </header>
 
-      {/* 검색 필터 */}
-      <div className="search-container">
-        <input 
-          type="text" 
-          placeholder="단어 또는 뜻 검색..." 
-          className="search-input"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        {/* 검색 필터 */}
+        <div className="search-container">
+          <input 
+            type="text" 
+            placeholder="단어 또는 뜻 검색..." 
+            className="search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       {/* 로딩 표시 */}
