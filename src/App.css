@@ -42,10 +42,11 @@
   font-weight: 900;
   line-height: 1;
   letter-spacing: -1px;
+  color: #4A4D52;
 }
 
 .logo-accent {
-  color: #7A30A8;
+  color: #4A4D52;
 }
 
 .logo-heart {
